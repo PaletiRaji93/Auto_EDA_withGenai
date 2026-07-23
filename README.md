@@ -56,6 +56,6 @@ Open `sweetviz_report.html` in a browser to review the EDA results.
 Place the dataset file as either:
 
 - `sales_data.csv` in the project root, or
-- `data/sales_data.csv`
+- `data/sales_data.csv`   
 
 The CSV should contain a sales metric column such as `Sales` or `revenue`.
