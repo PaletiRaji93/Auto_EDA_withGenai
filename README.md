@@ -1,61 +1,89 @@
 # Auto EDA with GenAI
 
-This project performs automated exploratory data analysis on a sales dataset using Python.
-It uses Sweetviz for generating a visual HTML report and can optionally use YData Profiling if the required dependency is available.
+This project is built to explore a sales dataset quickly with Python. It generates visual reports using Sweetviz, and it can also create an optional YData profile report when the profiling dependencies are available.
 
-## Features
+## What is included
 
-- Verifies required library versions before running
-- Loads `sales_data.csv` from the workspace root or from the `data/` folder
-- Detects the sales target column automatically (`revenue` or `Sales`)
-- Generates `sweetviz_report.html` with rich EDA visuals
-- Attempts YData Profiling when `setuptools` and `ydata-profiling` are installed
+- `automated_eda_sales.py` — runs automated EDA, generates `sweetviz_report.html`, and attempts YData profiling when possible
+- `dtale_eda.py` — opens the dataset in D-Tale for interactive data inspection in your browser
+- `data/sales_data.csv` — sample data used by both scripts
+- `sweetviz_report.html` — generated report file
+- `ydata_report.html` — generated only if YData Profiling works correctly
+
+## What this project does
+
+- checks required packages and versions
+- loads the sales dataset from root or `data/` folder
+- detects the main sales column automatically (`Sales`, `revenue`, or similar)
+- creates a Sweetviz HTML report
+- optionally creates a YData Profiling report when `setuptools` and profiling libraries are installed
+- lets you inspect the same dataset in D-Tale with `dtale_eda.py`
 
 ## Setup
 
-1. Create and activate your virtual environment:
-   ```powershell
-   .\.venv\Scripts\Activate.ps1
-   ```
-2. Install required packages:
-   ```powershell
-   pip install -r requirements.txt
-   ```
-3. If YData Profiling fails with import errors, install or upgrade its packaging dependencies:
-   ```powershell
-   .\.venv\Scripts\python.exe -m pip install --upgrade setuptools platformdirs
-   .\.venv\Scripts\python.exe -m pip install ydata-profiling
-   ```
+If you are using a conda environment with Python 3.11, run the following from the project folder:
 
-4. If you use Python 3.13 and `ydata-profiling` still fails, install `fg-data-profiling` instead or use Python 3.11/3.12:
-   ```powershell
-   .\.venv\Scripts\python.exe -m pip install fg-data-profiling
-   ```
+```powershell
+conda activate autoeda
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
 
-> Note: Python 3.13 often has compatibility issues with `pkg_resources` and YData Profiling packages. For best results, use Python 3.11 or 3.12 for profile generation.
+If you want YData Profiling to work reliably, also install or upgrade these packages:
 
-## Usage
+```powershell
+python -m pip install --upgrade setuptools platformdirs
+python -m pip install --upgrade ydata-profiling fg-data-profiling
+```
 
-Run the script from the project root:
+If `pkg_resources` is missing, the command below will fix it:
+
+```powershell
+python -m pip install --upgrade setuptools
+```
+
+## Running the EDA report
+
+From the project root:
 
 ```powershell
 python automated_eda_sales.py
 ```
 
-The script will print status messages and create the report files.
+Expected behavior:
 
-## Output
+- `sweetviz_report.html` should be created every time
+- `ydata_report.html` is created only when profiling dependencies are available
+- the script prints status messages and warns if it uses `Sales` instead of `revenue`
 
-- `sweetviz_report.html` — main generated report
-- `ydata_report.html` — generated only when YData Profiling is available
+## Opening the report
 
-Open `sweetviz_report.html` in a browser to review the EDA results.
+After the script finishes, open `sweetviz_report.html` in your browser.
 
-## Dataset
+If YData Profiling succeeds, `ydata_report.html` will also be available.
 
-Place the dataset file as either:
+## Using D-Tale
 
-- `sales_data.csv` in the project root, or
-- `data/sales_data.csv`   
+To inspect the dataset interactively:
 
-The CSV should contain a sales metric column such as `Sales` or `revenue`.
+```powershell
+python dtale_eda.py
+```
+
+That script will launch D-Tale and print a local URL. Open the URL in your browser and press ENTER in the terminal when you are done.
+
+## Dataset location
+
+The project looks for the dataset in one of these places:
+
+- `sales_data.csv` in the project root
+- `data/sales_data.csv`
+
+Your file should include a sales metric column such as `Sales`, `revenue`, `amount`, or `total`.
+
+## Notes
+
+- If Sweetviz runs successfully, `sweetviz_report.html` is ready to view.
+- YData Profiling may fail if `setuptools` or `pkg_resources` is missing.
+- Because you are using Python 3.11, this setup is a good fit for the profiling tools.
+- If profiling still does not work, the main analysis is still available via Sweetviz and D-Tale.
